@@ -34,6 +34,22 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         super.viewWillAppear(animated)
         viewModel?.fetchMessages()
     }
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        let message = "I can't believe Tweeter now supports chunking my messages, so I don't have to do it myself."
+        let expectedSplitedMessages1 = ["1/2 I can't believe Tweeter now supports chunking", "2/2 my messages, so I don't have to do it myself."]
+        let expectedSplitedMessages2 = ["1/2 I can't believe Tweeter now supports chunking", "2/2 my messages, so I don't have to do it myself."]
+        
+        do{
+            let splitedMessage = try splitMessage(message: message)
+            print("error: \(splitedMessage)")
+        }catch MessageError.invalidLength{
+            print("error: cha biet bi gi")
+        }catch{
+            print("error: \(error.localizedDescription)")
+
+        }
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

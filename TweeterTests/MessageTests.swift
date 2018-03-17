@@ -1,5 +1,5 @@
 //
-//  TweeterTests.swift
+//  MessageTests.swift
 //  TweeterTests
 //
 //  Created by Apple on 3/17/18.
@@ -9,7 +9,7 @@
 import XCTest
 @testable import Tweeter
 
-class TweeterTests: XCTestCase {
+class MessageTests: XCTestCase {
     
     override func setUp() {
         super.setUp()
@@ -33,7 +33,7 @@ class TweeterTests: XCTestCase {
         }
     }
     func testSplitMessage(){
-        //let message = "I can't believe Tweeter now supports chunking my messages, so I don't have to do it myself."
+        let message = "I can't believe Tweeter now supports chunking my messages, so I don't have to do it myself."
         let expectedSplitedMessages1 = ["1/2 I can't believe Tweeter now supports chunking", "2/2 my messages, so I don't have to do it myself."]
         let expectedSplitedMessages2 = ["1/2 I can't believe Tweeter now supports chunking", "2/2 my messages, so I don't have to do it myself."]
         
@@ -45,4 +45,5 @@ class TweeterTests: XCTestCase {
         //        }
         XCTAssertEqual(expectedSplitedMessages1, expectedSplitedMessages2)
     }
+    
 }
