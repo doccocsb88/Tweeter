@@ -25,6 +25,10 @@ class MessageViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
-    
+    func configureCell(message:Message){
+        self.contentLabel.text = message.content
+        self.dateTimeLabel.text = message.dateTime?.convertToString(format: .yearMonthDay)
+        
+    }
     
 }

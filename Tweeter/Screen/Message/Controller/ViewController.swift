@@ -17,20 +17,23 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     @IBOutlet weak var sendButton: UIButton!
     
     @IBOutlet weak var chatboxBottomConstraint: NSLayoutConstraint!
-    
     @IBOutlet weak var chatboxHeightConstraint: NSLayoutConstraint!
-    
     @IBOutlet weak var messageHeightConstraint: NSLayoutConstraint!
+    
+    fileprivate var viewModel: MessageViewModel?
+
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        
-        setupView()
         registerKeyboardNotifications()
+        setupView()
         
       
     }
-
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        viewModel?.fetchMessages()
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -41,18 +44,41 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 
     @IBAction func sendButtonTapped(_ sender: Any) {
         
-        
+        saveMessage()
         resetChatView()
     }
 }
 extension ViewController{
     func setupView(){
         self.title = NSLocalizedString("title_screen_main", comment: "")
-        
+        viewModel = MessageViewModel { [unowned self] (state) in
+            switch state.editingStyle {
+            case .none:
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+//                    self.tableView .setContentOffset(CGPoint(x:0,y:CGFloat.greatestFiniteMagnitude), animated: true)
+                }
+               
+                
+            case .insert(_):
+                self.tableView.beginUpdates()
+                let indexPath = IndexPath(item: self.tableView.numberOfRows(inSection: 0), section: 0)
+                self.tableView.insertRows(at: [indexPath], with: .automatic)
+                self.tableView.endUpdates()
+                if (self.viewModel?.state.messages.count)! > 0 {
+                    self.tableView.scrollToRow(at: IndexPath(item:(self.viewModel?.state.messages.count)! - 1, section: 0), at: .bottom, animated: true)
+                }
+            case let .delete(indexPath):
+                self.tableView.beginUpdates()
+                self.tableView.deleteRows(at: [indexPath], with: .automatic)
+                self.tableView.endUpdates()
+            }
+        }
         /**/
         self.tableView.rowHeight = UITableViewAutomaticDimension
         self.tableView.estimatedRowHeight = 140
         self.tableView.register(UINib(nibName: "MessageViewCell", bundle: nil), forCellReuseIdentifier: "MessageViewCell")
+        
         
         //
         
@@ -112,12 +138,17 @@ extension ViewController{
 
 extension ViewController{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        return  (viewModel?.numberOfItemsToDisplay(in: section))!
+            
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "MessageViewCell", for: indexPath)
         
+        let cell = tableView.dequeueReusableCell(withIdentifier: "MessageViewCell", for: indexPath) as! MessageViewCell
+        
+        if let message = viewModel?.message(at: indexPath){
+            cell.configureCell(message: message)
+        }
         
         return cell
     }
@@ -139,6 +170,16 @@ extension ViewController{
             self.view.updateConstraintsIfNeeded()
             self.view.layoutIfNeeded()
         }
+    }
+}
+extension ViewController{
+    func saveMessage(){
+        guard let content = self.messageTextView.text else{
+            return
+        }
+        let newMessage = CoredataService.shared().addNewMessage(content:content)
+        viewModel?.addNewMessage(message: newMessage)
+        CoredataService.shared().save()
     }
 }
 
