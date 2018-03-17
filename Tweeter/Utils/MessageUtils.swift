@@ -15,13 +15,13 @@ public func splitMessage(message:String) throws -> [String]{
     
     let estimateChild = assumpChild(message:message, maxLengh: maxCharactor)
     let stringArray = message.components(separatedBy: .whitespaces).filter {$0.count > 0 }
-    let stringLenArray = stringArray.filter {$0.count > 50}
-    if stringLenArray.count > 0{
-        throw MessageError.invalidLength
-        
-    }
+//    let stringLenArray = stringArray.filter {$0.count > 50}
+//    if stringLenArray.count > 0{
+//        throw MessageError.invalidLength
+//        
+//    }
     do{
-        let splitedArray = try splitStringArray(stringArray: stringArray, estimateChild: estimateChild)
+        let splitedArray = try splitStringArray(stringArray: stringArray, childCount: estimateChild)
         var splitedMessage:[String] = [String]()
         var index = 1;
         let totalSubMessage = splitedArray.count
@@ -38,16 +38,16 @@ public func splitMessage(message:String) throws -> [String]{
     }
   
 }
-public func splitStringArray(stringArray: [String], estimateChild: Int) throws -> [String]{
+public func splitStringArray(stringArray: [String], childCount: Int) throws -> [String]{
     var splitedArray = [String]();
     
+    var estimateChild = childCount
 
     var curpage = 1;
-    let averageWord = stringArray.count / estimateChild;
+    var averageWord = stringArray.count / estimateChild;
     var startIndex = 0;
 //    var count = 0;
     var countMaxLenSubMessage = 0;
-    
     while startIndex < stringArray.count{
         let prefix = "\(curpage)/\(estimateChild)"
         let prefixLen = prefix.count + 1
@@ -96,16 +96,27 @@ public func splitStringArray(stringArray: [String], estimateChild: Int) throws -
             }
             
         }
-        let submessage = subArray.joined(separator: " ")
-        if subArray.count == 1 && submessage.count + prefixLen > maxCharactor{
+        if subArray.count == 0{
             throw MessageError.invalidLength
         }
-        print("\(curpage)/\(estimateChild) ::::: \(submessage.count) : \(subArray.count) \(submessage)")
+        let submessage = subArray.joined(separator: " ")
+
+        //print("\(curpage)/\(estimateChild) ::::: \(submessage.count) : \(subArray.count) \(submessage)")
         splitedArray.append(submessage)
         curpage += 1
         startIndex += deltaIndex
         if submessage.count + prefixLen == 50{
             countMaxLenSubMessage += 1
+        }
+        if splitedArray.count == 1000 {
+            //re-estimate total sub message after first 10000 submessage
+            let estimateSubString = startIndex /  averageWord
+            let deltaChild = splitedArray.count - estimateSubString
+            if deltaChild > 0{
+                estimateChild += deltaChild * ( stringArray.count / startIndex + 1)
+            }
+         
+            print("nhuc dau")
         }
     }
 //    print("count : \(count)")
@@ -120,8 +131,11 @@ public func splitStringArray(stringArray: [String], estimateChild: Int) throws -
             
         }else{
             print("de quy \(estimatePrefix) \(splitedArray.count + 1)")
-            return try splitStringArray(stringArray:stringArray , estimateChild: splitedArray.count)
+            return try splitStringArray(stringArray:stringArray , childCount: splitedArray.count)
         }
+    }else if actualPrefix.count < estimatePrefix.count{
+        return try splitStringArray(stringArray:stringArray , childCount: splitedArray.count)
+
     }
     //307 -- 385
     return splitedArray
@@ -165,3 +179,4 @@ public func countLen(array:[String]) -> Int{
     
     return count
 }
+

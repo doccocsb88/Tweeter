@@ -37,7 +37,8 @@ class CoredataService{
         let fetchRequest =  NSFetchRequest<NSFetchRequestResult>(entityName: "Message")
         let currentDate = Date() as NSDate
         fetchRequest.predicate = NSPredicate(format: "dateTime <= %@", currentDate)
-        
+        let messageSortDescriptor = NSSortDescriptor(key: "order", ascending: true)
+        fetchRequest.sortDescriptors = [messageSortDescriptor]
         do {
             let fetchedMessages = try context.fetch(fetchRequest) as! [Message]
             return fetchedMessages
@@ -48,10 +49,11 @@ class CoredataService{
         
     }
     
-    func addNewMessage(content:String) -> Message{
+    func addNewMessage(content:String, order: Int) -> Message{
         let newEntry = Message(context: context)
         newEntry.content = content
         newEntry.dateTime = Date()
+        newEntry.order = Int64(order)
         return newEntry
     }
     func save(){

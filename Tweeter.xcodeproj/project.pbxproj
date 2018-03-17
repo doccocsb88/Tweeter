@@ -20,7 +20,9 @@
 		183D0C0A205D220300145CD8 /* CoredataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 183D0C09205D220300145CD8 /* CoredataService.swift */; };
 		183D0C0C205D226D00145CD8 /* MessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 183D0C0B205D226D00145CD8 /* MessageViewModel.swift */; };
 		183D0C0E205D2C0500145CD8 /* MessageUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 183D0C0D205D2C0500145CD8 /* MessageUtils.swift */; };
-		183D0C10205D334700145CD8 /* MessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 183D0C0F205D334700145CD8 /* MessageTests.swift */; };
+		183D0C12205D481800145CD8 /* MessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 183D0C11205D481800145CD8 /* MessageTests.swift */; };
+		183D0C14205D623A00145CD8 /* BaseController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 183D0C13205D623800145CD8 /* BaseController.swift */; };
+		183D0C16205D637F00145CD8 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 183D0C15205D637F00145CD8 /* Constants.swift */; };
 		43531291C4C32888D36A3D27 /* Pods_Tweeter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E316C3A1180FC7E9A42DD6C /* Pods_Tweeter.framework */; };
 		88E8D83564F5707D2748F8AC /* Pods_TweeterTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79123BC13061B5EB806E7320 /* Pods_TweeterTests.framework */; };
 /* End PBXBuildFile section */
@@ -55,7 +57,9 @@
 		183D0C09205D220300145CD8 /* CoredataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoredataService.swift; sourceTree = "<group>"; };
 		183D0C0B205D226D00145CD8 /* MessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageViewModel.swift; sourceTree = "<group>"; };
 		183D0C0D205D2C0500145CD8 /* MessageUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageUtils.swift; sourceTree = "<group>"; };
-		183D0C0F205D334700145CD8 /* MessageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageTests.swift; sourceTree = "<group>"; };
+		183D0C11205D481800145CD8 /* MessageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageTests.swift; sourceTree = "<group>"; };
+		183D0C13205D623800145CD8 /* BaseController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseController.swift; sourceTree = "<group>"; };
+		183D0C15205D637F00145CD8 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		79123BC13061B5EB806E7320 /* Pods_TweeterTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TweeterTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		956126A92C1B899376A81E71 /* Pods-Tweeter.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tweeter.release.xcconfig"; path = "Pods/Target Support Files/Pods-Tweeter/Pods-Tweeter.release.xcconfig"; sourceTree = "<group>"; };
 		F46B25A153222B56DC83521F /* Pods-TweeterTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TweeterTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TweeterTests/Pods-TweeterTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -105,9 +109,9 @@
 		183D0BD7205D0D4700145CD8 /* Tweeter */ = {
 			isa = PBXGroup;
 			children = (
+				183D0BFB205D101900145CD8 /* Utils */,
 				183D0C08205D21E600145CD8 /* Service */,
 				183D0BFC205D103000145CD8 /* Screen */,
-				183D0BFB205D101900145CD8 /* Utils */,
 				183D0BD8205D0D4700145CD8 /* AppDelegate.swift */,
 				183D0BDC205D0D4700145CD8 /* Main.storyboard */,
 				183D0BE2205D0D4700145CD8 /* Assets.xcassets */,
@@ -123,7 +127,7 @@
 			children = (
 				183D0BF0205D0D4800145CD8 /* TweeterTests.swift */,
 				183D0BF2205D0D4800145CD8 /* Info.plist */,
-				183D0C0F205D334700145CD8 /* MessageTests.swift */,
+				183D0C11205D481800145CD8 /* MessageTests.swift */,
 			);
 			path = TweeterTests;
 			sourceTree = "<group>";
@@ -133,6 +137,7 @@
 			children = (
 				183D0C06205D1C3D00145CD8 /* Utils.swift */,
 				183D0C0D205D2C0500145CD8 /* MessageUtils.swift */,
+				183D0C15205D637F00145CD8 /* Constants.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -168,6 +173,7 @@
 			isa = PBXGroup;
 			children = (
 				183D0BDA205D0D4700145CD8 /* ViewController.swift */,
+				183D0C13205D623800145CD8 /* BaseController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -427,9 +433,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				183D0C07205D1C3D00145CD8 /* Utils.swift in Sources */,
+				183D0C14205D623A00145CD8 /* BaseController.swift in Sources */,
 				183D0C04205D15C800145CD8 /* MessageViewCell.swift in Sources */,
 				183D0BE1205D0D4700145CD8 /* Tweeter.xcdatamodeld in Sources */,
 				183D0C0E205D2C0500145CD8 /* MessageUtils.swift in Sources */,
+				183D0C16205D637F00145CD8 /* Constants.swift in Sources */,
 				183D0BDB205D0D4700145CD8 /* ViewController.swift in Sources */,
 				183D0C0C205D226D00145CD8 /* MessageViewModel.swift in Sources */,
 				183D0C0A205D220300145CD8 /* CoredataService.swift in Sources */,
@@ -442,7 +450,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				183D0BF1205D0D4800145CD8 /* TweeterTests.swift in Sources */,
-				183D0C10205D334700145CD8 /* MessageTests.swift in Sources */,
+				183D0C12205D481800145CD8 /* MessageTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -592,7 +600,7 @@
 				DEVELOPMENT_TEAM = F59XSVKP6X;
 				INFOPLIST_FILE = Tweeter/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.hai..Tweeter;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hai.Tweeter;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -608,7 +616,7 @@
 				DEVELOPMENT_TEAM = F59XSVKP6X;
 				INFOPLIST_FILE = Tweeter/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.hai..Tweeter;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hai.Tweeter;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

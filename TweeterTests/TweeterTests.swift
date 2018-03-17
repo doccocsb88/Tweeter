@@ -10,7 +10,7 @@ import XCTest
 @testable import Tweeter
 
 class TweeterTests: XCTestCase {
-    
+   
     override func setUp() {
         super.setUp()
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -30,19 +30,8 @@ class TweeterTests: XCTestCase {
         // This is an example of a performance test case.
         self.measure {
             // Put the code you want to measure the time of here.
+    
         }
     }
-    func testSplitMessage(){
-        //let message = "I can't believe Tweeter now supports chunking my messages, so I don't have to do it myself."
-        let expectedSplitedMessages1 = ["1/2 I can't believe Tweeter now supports chunking", "2/2 my messages, so I don't have to do it myself."]
-        let expectedSplitedMessages2 = ["1/2 I can't believe Tweeter now supports chunking", "2/2 my messages, so I don't have to do it myself."]
-        
-        //        do{
-        //            let splitedMessage = try splitMessage(message: message)
-        //
-        //        }catch{
-        //
-        //        }
-        XCTAssertEqual(expectedSplitedMessages1, expectedSplitedMessages2)
-    }
+ 
 }

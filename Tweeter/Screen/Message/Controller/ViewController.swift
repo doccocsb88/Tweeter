@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextViewDelegate {
+class ViewController: BaseController, UITableViewDelegate, UITableViewDataSource, UITextViewDelegate {
 
     @IBOutlet weak var tableView: UITableView!
     
@@ -36,19 +36,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        let message = "I can't believe Tweeter now supports chunking my messages, so I don't have to do it myself."
-        let expectedSplitedMessages1 = ["1/2 I can't believe Tweeter now supports chunking", "2/2 my messages, so I don't have to do it myself."]
-        let expectedSplitedMessages2 = ["1/2 I can't believe Tweeter now supports chunking", "2/2 my messages, so I don't have to do it myself."]
         
-        do{
-            let splitedMessage = try splitMessage(message: message)
-            print("error: \(splitedMessage)")
-        }catch MessageError.invalidLength{
-            print("error: cha biet bi gi")
-        }catch{
-            print("error: \(error.localizedDescription)")
-
-        }
     }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -66,7 +54,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 }
 extension ViewController{
     func setupView(){
-        self.title = NSLocalizedString("title_screen_main", comment: "")
+        self.title = "Tweeter"
         viewModel = MessageViewModel { [unowned self] (state) in
             switch state.editingStyle {
             case .none:
@@ -106,8 +94,8 @@ extension ViewController{
     
     func registerKeyboardNotifications(){
         //Adding notifies on keyboard appearing
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardNotification(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardNotification(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     
     func deregisterKeyboardNotifications(){
@@ -119,7 +107,7 @@ extension ViewController{
     @objc func tapOnTable(gesture:UIGestureRecognizer){
         self.messageTextView.resignFirstResponder()
     }
-    @objc func keyboardNotification(notification: NSNotification) {
+    @objc func keyboardWillShow(notification: NSNotification) {
         if let userInfo = notification.userInfo{
             let duration:TimeInterval = (userInfo[UIKeyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue ?? 0
             let animationCurveRawNSN = userInfo[UIKeyboardAnimationCurveUserInfoKey] as? NSNumber
@@ -128,14 +116,9 @@ extension ViewController{
             
             if let keyboardSize = (userInfo[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
                 let height = keyboardSize.height
-                if self.chatboxBottomConstraint.constant < height{
-                    //willshow
-                    self.chatboxBottomConstraint.constant = height
-                }else{
-                    //willHide
-                    self.chatboxBottomConstraint.constant = 0
-                    
-                }
+                
+                self.chatboxBottomConstraint.constant = height
+                
                 UIView.animate(withDuration: duration,
                                delay: TimeInterval(0),
                                options: animationCurve,
@@ -143,6 +126,24 @@ extension ViewController{
                                completion: nil)
                 
             }
+        }
+    }
+    @objc func keyboardWillHide(notification: NSNotification) {
+        if let userInfo = notification.userInfo{
+            let duration:TimeInterval = (userInfo[UIKeyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue ?? 0
+            let animationCurveRawNSN = userInfo[UIKeyboardAnimationCurveUserInfoKey] as? NSNumber
+            let animationCurveRaw = animationCurveRawNSN?.uintValue ?? UIViewAnimationOptions.curveEaseInOut.rawValue
+            let animationCurve:UIViewAnimationOptions = UIViewAnimationOptions(rawValue: animationCurveRaw)
+            
+            
+            self.chatboxBottomConstraint.constant = 0
+            UIView.animate(withDuration: duration,
+                           delay: TimeInterval(0),
+                           options: animationCurve,
+                           animations: { self.view.layoutIfNeeded() },
+                           completion: nil)
+            
+            
         }
     }
     
@@ -169,8 +170,6 @@ extension ViewController{
         return cell
     }
     func textViewDidChange(_ textView: UITextView) {
-        // Do the logic you want to happen everytime the textView changes
-        // if string is == "do it" etc....
         let numberOfLine = self.messageTextView.numberOfLines()
         if numberOfLine > 5 {
             self.messageTextView.isScrollEnabled = true
@@ -193,9 +192,22 @@ extension ViewController{
         guard let content = self.messageTextView.text else{
             return
         }
-        let newMessage = CoredataService.shared().addNewMessage(content:content)
-        viewModel?.addNewMessage(message: newMessage)
-        CoredataService.shared().save()
+        do{
+            let messageArray = try splitMessage(message: content)
+            var index = (viewModel?.numberOfItemsToDisplay(in: 0))! + 1
+            for message in messageArray{
+                let newMessage = CoredataService.shared().addNewMessage(content:message, order: index)
+                viewModel?.addNewMessage(message: newMessage)
+                index += 1
+            }
+            CoredataService.shared().save()
+        }catch MessageError.invalidLength{
+            showErrorMessage(message: ErrorMesages.messageMaxLength.rawValue)
+        }catch{
+            showErrorMessage(message: ErrorMesages.unknow.rawValue)
+
+        }
+      
     }
 }
 
