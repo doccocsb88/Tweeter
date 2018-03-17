@@ -44,7 +44,7 @@ public func splitStringArray(stringArray: [String], childCount: Int) throws -> [
     var estimateChild = childCount
 
     var curpage = 1;
-    var averageWord = stringArray.count / estimateChild;
+    let averageWord = stringArray.count / estimateChild;
     var startIndex = 0;
 //    var count = 0;
     var countMaxLenSubMessage = 0;
@@ -105,7 +105,7 @@ public func splitStringArray(stringArray: [String], childCount: Int) throws -> [
         splitedArray.append(submessage)
         curpage += 1
         startIndex += deltaIndex
-        if submessage.count + prefixLen == 50{
+        if submessage.count + prefixLen == maxCharactor{
             countMaxLenSubMessage += 1
         }
         if splitedArray.count == 1000 {
@@ -127,6 +127,7 @@ public func splitStringArray(stringArray: [String], childCount: Int) throws -> [
         //        let deltaPrefixLen = actualPrefix.count - assumpPrefix.count
         
         if countMaxLenSubMessage == 0{
+            //make curtain when prefix length changed, it does not affect our result
             return splitedArray
             
         }else{
@@ -176,7 +177,6 @@ public func countLen(array:[String]) -> Int{
     for i in 0 ..< array.count{
         count += array[i].count
     }
-    
     return count
 }
 

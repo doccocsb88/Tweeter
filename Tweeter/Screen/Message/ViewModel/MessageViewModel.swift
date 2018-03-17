@@ -54,12 +54,7 @@ final class MessageViewModel {
     }
     func fetchMessages() {
         self.state.messages = CoredataService.shared().getListMessage()
-        for message in self.state.messages{
-            print("\(message.dateTime)")
-        }
         state.editingStyle = .none
-        
-        
     }
     
     func numberOfItemsToDisplay(in section: Int) -> Int {

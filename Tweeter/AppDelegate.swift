@@ -17,6 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        setupNavigationBar()
         return true
     }
 
@@ -89,5 +90,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
 
+}
+extension AppDelegate{
+    func setupNavigationBar(){
+        UINavigationBar.appearance().barTintColor = UIColor.Tweeter.navigationBarColor
+        UINavigationBar.appearance().tintColor = .white
+        UINavigationBar.appearance().titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
+        UINavigationBar.appearance().isTranslucent = false
+    }
 }
 

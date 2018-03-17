@@ -9,5 +9,6 @@
 import Foundation
 enum ErrorMesages:String {
     case messageMaxLength = "Your message contain a word have more than 50 charactors."
-    case unknow = "OOP! Have something wrong"
+    case unknow = "OOPS! Have something wrong"
 }
+
